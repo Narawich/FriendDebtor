@@ -19,6 +19,15 @@ export async function createGroup(formData: FormData) {
 
   const { supabase, user } = await requireUser();
 
+  // ----- DEBUG: เทียบ id ที่แอปเห็น กับ id ที่ database เห็นจริง -----
+  const { data: dbUid, error: whoamiError } = await supabase.rpc("whoami");
+  throw new Error(
+    `DEBUG — user.id (แอปเห็น): ${user.id} | auth.uid() (DB เห็น): ${dbUid ?? "null"} | whoami error: ${
+      whoamiError?.message ?? "none"
+    }`
+  );
+  // ----- จบส่วน debug -----
+
   const { data: group, error: groupError } = await supabase
     .from("groups")
     .insert({ name, created_by: user.id })
@@ -51,7 +60,6 @@ export async function deleteGroup(groupId: string) {
   redirect("/");
 }
 
-// เพิ่มเพื่อนเข้ากลุ่มด้วยรหัสเพื่อนของเขา — เข้าได้ทันที ไม่ต้องรอตอบรับ
 export async function addMemberByCode(groupId: string, formData: FormData) {
   const code = String(formData.get("code") || "").trim().toUpperCase();
   if (!code) throw new Error("กรอกรหัสเพื่อนก่อน");
