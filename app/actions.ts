@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { randomUUID } from "crypto";
 import { createClient } from "@/lib/supabase/server";
 
 async function requireUser() {
@@ -19,15 +20,12 @@ export async function createGroup(formData: FormData) {
 
   const { supabase, user } = await requireUser();
 
-  const insertResult = await supabase
+  const groupId = randomUUID();
+
+  const { error: groupError } = await supabase
     .from("groups")
-    .insert({ name, created_by: user.id })
-    .select()
-    .single();
-  const group = insertResult.data;
-  if (insertResult.error || !group) {
-    throw new Error(insertResult.error?.message || "สร้างกลุ่มไม่สำเร็จ");
-  }
+    .insert({ id: groupId, name, created_by: user.id });
+  if (groupError) throw new Error(groupError.message);
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -35,15 +33,16 @@ export async function createGroup(formData: FormData) {
     .eq("id", user.id)
     .single();
 
-  await supabase.from("group_members").insert({
-    group_id: group.id,
+  const { error: memberError } = await supabase.from("group_members").insert({
+    group_id: groupId,
     user_id: user.id,
     display_name: profile?.display_name ?? "ฉัน",
     invited_by: user.id,
   });
+  if (memberError) throw new Error(memberError.message);
 
   revalidatePath("/");
-  redirect(`/groups/${group.id}`);
+  redirect(`/groups/${groupId}`);
 }
 
 export async function deleteGroup(groupId: string) {
