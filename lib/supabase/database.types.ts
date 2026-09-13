@@ -55,17 +55,44 @@ export interface MemberBalance {
 export interface Database {
   public: {
     Tables: {
-      profiles: { Row: Profile; Insert: Partial<Profile>; Update: Partial<Profile> };
-      groups: { Row: Group; Insert: Partial<Group>; Update: Partial<Group> };
+      profiles: {
+        Row: Profile;
+        Insert: Partial<Profile>;
+        Update: Partial<Profile>;
+        Relationships: [];
+      };
+      groups: {
+        Row: Group;
+        Insert: Partial<Group> & Pick<Group, "name" | "created_by">;
+        Update: Partial<Group>;
+        Relationships: [];
+      };
       group_members: {
         Row: GroupMember;
-        Insert: Partial<GroupMember>;
+        Insert: Partial<GroupMember> &
+          Pick<GroupMember, "group_id" | "display_name" | "invited_by">;
         Update: Partial<GroupMember>;
+        Relationships: [];
       };
-      debts: { Row: Debt; Insert: Partial<Debt>; Update: Partial<Debt> };
+      debts: {
+        Row: Debt;
+        Insert: Partial<Debt> &
+          Pick<
+            Debt,
+            "group_id" | "creditor_member_id" | "debtor_member_id" | "amount" | "created_by"
+          >;
+        Update: Partial<Debt>;
+        Relationships: [];
+      };
     };
     Views: {
-      member_balances: { Row: MemberBalance };
+      member_balances: {
+        Row: MemberBalance;
+        Relationships: [];
+      };
     };
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 }
