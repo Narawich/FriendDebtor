@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { createGroup, signOut } from "./actions";
+import LoginCodeReveal from "./login-code-reveal";
 
 export default async function GroupsPage() {
   const supabase = createClient();
@@ -11,6 +12,12 @@ export default async function GroupsPage() {
   const { data: profile } = await supabase
     .from("profiles")
     .select("display_name, friend_code")
+    .eq("id", user!.id)
+    .single();
+
+  const { data: secret } = await supabase
+    .from("profile_secrets")
+    .select("login_code")
     .eq("id", user!.id)
     .single();
 
@@ -42,7 +49,7 @@ export default async function GroupsPage() {
         </form>
       </div>
 
-      <div className="bg-white border border-line rounded-[10px] px-4 py-3 mb-5 flex items-center justify-between">
+      <div className="bg-white border border-line rounded-[10px] px-4 py-3 mb-2 flex items-center justify-between">
         <div>
           <p className="text-[12px] text-muted">รหัสเพื่อนของคุณ</p>
           <p className="text-[18px] font-medium tracking-wider">{profile?.friend_code}</p>
@@ -52,13 +59,15 @@ export default async function GroupsPage() {
         </p>
       </div>
 
+      <LoginCodeReveal loginCode={secret?.login_code ?? ""} />
+
       {!memberships?.length ? (
         <div className="text-center py-14">
           <p className="text-[15px] font-medium">ยังไม่มีกลุ่ม</p>
           <p className="text-[13px] text-muted mt-1">สร้างกลุ่มแรกเพื่อเริ่มจดบันทึกหนี้</p>
         </div>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-2 mt-5">
           {memberships.map((m: any) => (
             <li key={m.group_id}>
               <Link
