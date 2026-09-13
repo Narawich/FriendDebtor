@@ -20,20 +20,23 @@ export async function createGroup(formData: FormData) {
   const { supabase, user } = await requireUser();
 
   // ----- DEBUG: เทียบ id ที่แอปเห็น กับ id ที่ database เห็นจริง -----
-  const { data: dbUid, error: whoamiError } = await supabase.rpc("whoami");
+  const whoamiResult = await supabase.rpc("whoami");
+  const dbUid = whoamiResult.data;
+  const whoamiErrorMessage = whoamiResult.error?.message ?? "none";
   throw new Error(
-    `DEBUG — user.id (แอปเห็น): ${user.id} | auth.uid() (DB เห็น): ${dbUid ?? "null"} | whoami error: ${
-      whoamiError?.message ?? "none"
-    }`
+    "DEBUG user.id=" + user.id + " authUid=" + String(dbUid) + " whoamiError=" + whoamiErrorMessage
   );
-  // ----- จบส่วน debug -----
+  // ----- จบส่วน debug (โค้ดข้างล่างนี้ยังไม่ทำงานตอนนี้) -----
 
-  const { data: group, error: groupError } = await supabase
+  const insertResult = await supabase
     .from("groups")
     .insert({ name, created_by: user.id })
     .select()
     .single();
-  if (groupError) throw new Error(groupError.message);
+  const group = insertResult.data;
+  if (insertResult.error || !group) {
+    throw new Error(insertResult.error?.message || "สร้างกลุ่มไม่สำเร็จ");
+  }
 
   const { data: profile } = await supabase
     .from("profiles")
