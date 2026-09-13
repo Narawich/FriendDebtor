@@ -26,19 +26,16 @@ export async function createGroup(formData: FormData) {
     .single();
   if (groupError) throw new Error(groupError.message);
 
-  // ผู้สร้างกลุ่มเป็นสมาชิกคนแรกโดยอัตโนมัติ
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name, email")
+    .select("display_name")
     .eq("id", user.id)
     .single();
 
   await supabase.from("group_members").insert({
     group_id: group.id,
     user_id: user.id,
-    invited_email: profile?.email ?? null,
     display_name: profile?.display_name ?? "ฉัน",
-    status: "joined",
     invited_by: user.id,
   });
 
@@ -54,34 +51,34 @@ export async function deleteGroup(groupId: string) {
   redirect("/");
 }
 
-export async function inviteMember(groupId: string, formData: FormData) {
-  const email = String(formData.get("email") || "").trim().toLowerCase();
-  const displayName = String(formData.get("display_name") || "").trim();
-  if (!email || !displayName) throw new Error("กรอกชื่อและอีเมลให้ครบ");
+// เพิ่มเพื่อนเข้ากลุ่มด้วยรหัสเพื่อนของเขา — เข้าได้ทันที ไม่ต้องรอตอบรับ
+export async function addMemberByCode(groupId: string, formData: FormData) {
+  const code = String(formData.get("code") || "").trim().toUpperCase();
+  if (!code) throw new Error("กรอกรหัสเพื่อนก่อน");
 
   const { supabase, user } = await requireUser();
+
+  const { data: targetProfile, error: lookupError } = await supabase
+    .from("profiles")
+    .select("id, display_name")
+    .eq("friend_code", code)
+    .maybeSingle();
+
+  if (lookupError) throw new Error(lookupError.message);
+  if (!targetProfile) throw new Error("ไม่พบรหัสนี้ ลองเช็คกับเพื่อนอีกครั้ง");
 
   const { error } = await supabase.from("group_members").insert({
     group_id: groupId,
-    invited_email: email,
-    display_name: displayName,
-    status: "invited",
+    user_id: targetProfile.id,
+    display_name: targetProfile.display_name,
     invited_by: user.id,
   });
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.code === "23505") throw new Error("คนนี้อยู่ในกลุ่มนี้อยู่แล้ว");
+    throw new Error(error.message);
+  }
 
   revalidatePath(`/groups/${groupId}`);
-}
-
-// เรียกตอนผู้ใช้ที่ล็อกอินแล้วกดรับคำเชิญที่ตรงกับอีเมลตัวเอง
-export async function acceptInvite(memberId: string) {
-  const { supabase, user } = await requireUser();
-  const { error } = await supabase
-    .from("group_members")
-    .update({ status: "joined", user_id: user.id })
-    .eq("id", memberId);
-  if (error) throw new Error(error.message);
-  revalidatePath("/");
 }
 
 export async function addDebt(

@@ -8,11 +8,16 @@ export default async function GroupsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name, friend_code")
+    .eq("id", user!.id)
+    .single();
+
   const { data: memberships } = await supabase
     .from("group_members")
     .select("group_id, groups(id, name)")
-    .eq("user_id", user!.id)
-    .eq("status", "joined");
+    .eq("user_id", user!.id);
 
   const groupIds = (memberships ?? []).map((m: any) => m.group_id);
 
@@ -30,11 +35,21 @@ export default async function GroupsPage() {
 
   return (
     <div className="px-5 pt-6 pb-10">
-      <div className="flex items-center justify-between mb-5">
-        <h1 className="text-[21px] font-medium">กลุ่มเพื่อน</h1>
+      <div className="flex items-center justify-between mb-3">
+        <h1 className="text-[21px] font-medium">สวัสดี {profile?.display_name}</h1>
         <form action={signOut}>
           <button className="text-[13px] text-muted hover:text-ink">ออกจากระบบ</button>
         </form>
+      </div>
+
+      <div className="bg-white border border-line rounded-[10px] px-4 py-3 mb-5 flex items-center justify-between">
+        <div>
+          <p className="text-[12px] text-muted">รหัสเพื่อนของคุณ</p>
+          <p className="text-[18px] font-medium tracking-wider">{profile?.friend_code}</p>
+        </div>
+        <p className="text-[12px] text-muted max-w-[140px] text-right">
+          บอกรหัสนี้ให้เพื่อน เพื่อให้เพื่อนเพิ่มคุณเข้ากลุ่มได้
+        </p>
       </div>
 
       {!memberships?.length ? (
