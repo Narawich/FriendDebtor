@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>หนี้เพื่อน — Frontend starter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-page: #EEF3FC;
+    --bg-card: #FFFFFF;
+    --bg-soft: #E4ECFB;
+    --blue: #4C6FF0;
+    --blue-dark: #3A56C4;
+    --blue-deep: #1F2E63;
+    --ink: #1B2440;
+    --muted: #8C93A8;
+    --border: #E3E8F5;
+    --amber: #F5A524;
+    --amber-bg: #FEF3DE;
+    --green: #2FBE7E;
+    --green-bg: #E4F8EE;
+    --red: #F2555A;
+    --shadow-card: 0 10px 24px -14px rgba(31, 46, 99, 0.25);
+    --shadow-soft: 0 6px 16px -10px rgba(31, 46, 99, 0.2);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Plus Jakarta Sans", "Noto Sans Thai", system-ui, sans-serif;
+    background: #D9E2F5;
+    color: var(--ink);
+    padding: 40px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .phone {
+    width: 320px;
+    background: var(--bg-page);
+    border-radius: 36px;
+    padding: 10px;
+    box-shadow: 0 30px 60px -20px rgba(20, 30, 70, 0.35);
+  }
+
+  .screen {
+    background: var(--bg-page);
+    border-radius: 28px;
+    overflow: hidden;
+    min-height: 640px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .label {
+    text-align: center;
+    color: #5C6684;
+    font-size: 13px;
+    margin: 0 0 10px;
+    font-weight: 500;
+  }
+
+  /* ---------- HOME SCREEN ---------- */
+
+  .home-header {
+    padding: 24px 22px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .greeting-eyebrow {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .greeting {
+    font-size: 21px;
+    font-weight: 600;
+    margin: 2px 0 0;
+    color: var(--blue-deep);
+  }
+
+  .bell {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .bell::after {
+    content: "";
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 1.5px solid var(--bg-card);
+  }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 20px 22px 4px;
+  }
+
+  .quick-action {
+    background: var(--bg-card);
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    padding: 12px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .quick-action .icon-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .quick-action span {
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .section-title {
+    padding: 22px 22px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--blue-deep);
+  }
+
+  .bill-card {
+    margin: 0 22px;
+    background: linear-gradient(135deg, #5B7CFA 0%, #3F5CD8 100%);
+    border-radius: 22px;
+    padding: 18px;
+    box-shadow: var(--shadow-card);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bill-card::after {
+    content: "";
+    position: absolute;
+    right: -30px;
+    bottom: -40px;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .bill-card-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .bill-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+
+  .bill-card-top .name {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .bill-card-top .meta {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 2px 0 0;
+  }
+
+  .bill-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+
+  .status-pill {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+
+  .swipe-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+  }
+
+  .balance-card {
+    margin: 14px 22px 0;
+    background: var(--bg-card);
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .balance-card .label-sm {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0 0 4px;
+  }
+
+  .balance-card .amount {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--red);
+    margin: 0;
+  }
+
+  .balance-card .view-btn {
+    background: var(--bg-soft);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .bottom-nav {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-around;
+    padding: 16px 10px 20px;
+  }
+
+  .bottom-nav .nav-item {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+  }
+
+  .bottom-nav .nav-item.active {
+    background: var(--blue);
+    color: #fff;
+  }
+
+  /* ---------- DETAIL SCREEN ---------- */
+
+  .detail-header {
+    background: var(--blue);
+    padding: 22px 20px 26px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 0 0 26px 26px;
+  }
+
+  .detail-header .back {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .detail-header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .detail-body {
+    background: var(--bg-card);
+    margin: -16px 16px 0;
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    padding: 18px 18px 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .row-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .ower-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ower-row:last-of-type { border-bottom: none; }
+
+  .ower-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: var(--bg-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .ower-info { flex: 1; min-width: 0; }
+
+  .ower-info .name {
+    font-size: 13.5px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .ower-info .sub {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin: 2px 0 0;
+  }
+
+  .ower-amount {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .totals {
+    margin-top: 10px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+  }
+
+  .totals .line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .totals .line.total {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .totals .line.total .value { color: var(--blue); }
+
+  .channel-card {
+    margin: 16px 16px 0;
+    background: var(--bg-card);
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .channel-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--green-bg);
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .channel-card .ch-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  .channel-card .ch-value {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 2px 0 0;
+    color: var(--ink);
+  }
+
+  .slide-to-pay {
+    margin: 18px 16px 20px;
+    background: var(--blue-deep);
+    border-radius: 18px;
+    padding: 6px;
+    position: relative;
+    height: 54px;
+    display: flex;
+    align-items: center;
+  }
+
+  .slide-track-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12.5px;
+    font-weight: 500;
+    pointer-events: none;
+  }
+
+  .slide-handle {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: #fff;
+    color: var(--blue-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.15s ease;
+  }
+
+  svg { display: block; }
+</style>
+</head>
+<body>
+
+<div>
+  <p class="label">หน้าแรก</p>
+  <div class="phone">
+    <div class="screen">
+
+      <div class="home-header">
+        <div>
+          <p class="greeting-eyebrow">สวัสดี</p>
+          <p class="greeting">ปอ 👋</p>
+        </div>
+        <div class="bell">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A56C4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <div class="quick-action">
+          <div class="icon-circle" style="background:#E4ECFB">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#4C6FF0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <span>กลุ่มเพื่อน</span>
+        </div>
+        <div class="quick-action">
+          <div class="icon-circle" style="background:#FEF3DE">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F5A524" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <span>เพิ่มบิล</span>
+        </div>
+        <div class="quick-action">
+          <div class="icon-circle" style="background:#E4F8EE">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2FBE7E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <span>ประวัติ</span>
+        </div>
+        <div class="quick-action">
+          <div class="icon-circle" style="background:#FDE8E8">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F2555A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <span>แจ้งเตือน</span>
+        </div>
+      </div>
+
+      <p class="section-title">บิลล่าสุด</p>
+      <div class="bill-card">
+        <div class="bill-card-top">
+          <div class="bill-avatar">🎤</div>
+          <div>
+            <p class="name">คาราโอเกะ</p>
+            <p class="meta">เจ้าของบิล: กวา · วันนี้ 20:14</p>
+          </div>
+        </div>
+        <p class="bill-title">140 บาท</p>
+        <span class="status-pill">รอชำระ 2 คน</span>
+        <div class="swipe-hint">
+          <span>ปัดเพื่อดูรายละเอียด</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>
+
+      <p class="section-title">ยอดค้างชำระ</p>
+      <div class="balance-card">
+        <div>
+          <p class="label-sm">รวมทุกกลุ่ม</p>
+          <p class="amount">450 บาท</p>
+        </div>
+        <button class="view-btn">ดูทั้งหมด</button>
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-item active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        </div>
+        <div class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </div>
+        <div class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </div>
+        <div class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div>
+  <p class="label">รายละเอียดบิล</p>
+  <div class="phone">
+    <div class="screen">
+
+      <div class="detail-header">
+        <div class="back">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </div>
+        <h1>รายละเอียดบิล</h1>
+      </div>
+
+      <div class="detail-body">
+        <div class="row-label">
+          <span>คนติดหนี้</span>
+          <span>จำนวนเงิน</span>
+        </div>
+
+        <div class="ower-row">
+          <div class="ower-avatar">แ</div>
+          <div class="ower-info">
+            <p class="name">แต๊ง</p>
+            <p class="sub">ยังไม่จ่าย</p>
+          </div>
+          <span class="ower-amount">50 บาท</span>
+        </div>
+
+        <div class="ower-row">
+          <div class="ower-avatar">น</div>
+          <div class="ower-info">
+            <p class="name">นัท</p>
+            <p class="sub">รอยืนยันสลิป</p>
+          </div>
+          <span class="ower-amount">60 บาท</span>
+        </div>
+
+        <div class="ower-row">
+          <div class="ower-avatar">ก</div>
+          <div class="ower-info">
+            <p class="name">กวา</p>
+            <p class="sub">จ่ายแล้ว</p>
+          </div>
+          <span class="ower-amount">30 บาท</span>
+        </div>
+
+        <div class="totals">
+          <div class="line">
+            <span>ยอดรวม</span>
+            <span>140 บาท</span>
+          </div>
+          <div class="line">
+            <span>จ่ายแล้ว</span>
+            <span>-30 บาท</span>
+          </div>
+          <div class="line total">
+            <span>ค้างชำระ</span>
+            <span class="value">110 บาท</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="channel-card">
+        <div class="channel-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div>
+          <p class="ch-label">ช่องทางชำระ</p>
+          <p class="ch-value">พร้อมเพย์ 08x-xxx-xxxx</p>
+        </div>
+      </div>
+
+      <div class="slide-to-pay" id="slideToPay">
+        <span class="slide-track-label" id="slideLabel">ปัดเพื่อยืนยันจ่าย</span>
+        <div class="slide-handle" id="slideHandle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const track = document.getElementById('slideToPay');
+  const handle = document.getElementById('slideHandle');
+  const label = document.getElementById('slideLabel');
+  let dragging = false;
+  let startX = 0;
+  let maxX = 0;
+
+  function setMaxX() {
+    maxX = track.clientWidth - handle.clientWidth - 12;
+  }
+  setMaxX();
+  window.addEventListener('resize', setMaxX);
+
+  function onDown(clientX) {
+    dragging = true;
+    startX = clientX - handle.getBoundingClientRect().left;
+    handle.style.cursor = 'grabbing';
+  }
+
+  function onMove(clientX) {
+    if (!dragging) return;
+    let x = clientX - track.getBoundingClientRect().left - startX;
+    x = Math.max(0, Math.min(x, maxX));
+    handle.style.transform = `translateX(${x}px)`;
+    label.style.opacity = String(1 - x / maxX);
+    if (x >= maxX - 2) {
+      dragging = false;
+      label.textContent = 'ยืนยันแล้ว';
+      label.style.opacity = '1';
+      handle.style.background = '#2FBE7E';
+      handle.style.color = '#fff';
+    }
+  }
+
+  function onUp() {
+    if (!dragging) return;
+    dragging = false;
+    handle.style.cursor = 'grab';
+    handle.style.transform = 'translateX(0)';
+    label.style.opacity = '1';
+  }
+
+  handle.addEventListener('mousedown', (e) => onDown(e.clientX));
+  window.addEventListener('mousemove', (e) => onMove(e.clientX));
+  window.addEventListener('mouseup', onUp);
+
+  handle.addEventListener('touchstart', (e) => onDown(e.touches[0].clientX));
+  window.addEventListener('touchmove', (e) => onMove(e.touches[0].clientX));
+  window.addEventListener('touchend', onUp);
+</script>
+
+</body>
+</html>
